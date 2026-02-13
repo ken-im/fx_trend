@@ -19,10 +19,10 @@ CURRENCIES = {
         'name': '유로화',
         'fdr_code': 'EUR/KRW'
     },
-    'BRL/KRW': {
-        'symbol': 'BRL/KRW',
-        'name': '브라질 헤알',
-        'fdr_code': 'BRL/KRW'
+    'USD/BRL': {
+        'symbol': 'USD/BRL',
+        'name': '브라질 헤알 (USD기준)',
+        'fdr_code': 'USD/BRL'
     }
 }
 

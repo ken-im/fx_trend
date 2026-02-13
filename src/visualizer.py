@@ -187,7 +187,6 @@ class FXVisualizer:
         """
         html = f"""
         <div style="text-align: center; margin: 18px 0; padding: 18px; background-color: #f8f9fa; border-radius: 10px;">
-            <h2 style="color: #2C3E50; margin-bottom: 18px;">{currency_name} 요약 정보</h2>
             <div style="display: flex; justify-content: space-around; flex-wrap: wrap;">
                 <div style="margin: 9px; padding: 13px; background-color: white; border-radius: 8px; min-width: 200px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
                     <h3 style="color: #e74c3c; margin: 0;">최고 환율</h3>
@@ -308,3 +307,195 @@ class FXVisualizer:
             f.write(html_content)
         
         print(f"HTML 파일이 생성되었습니다: {output_path}")
+    
+    def save_multi_currency_html(
+        self,
+        charts_data: Dict,
+        output_path: str,
+        title: str = "FX Trend Dashboard",
+        default_currency: str = 'USD/KRW'
+    ):
+        """
+        다중 통화 HTML 파일로 저장
+        
+        Args:
+            charts_data: {currency_code: {'figure': fig, 'summary': html, 'info': info, 'statistics': stats}}
+            output_path: 출력 파일 경로
+            title: 페이지 제목
+            default_currency: 기본 선택 통화
+        """
+        # 현재 시간
+        generated_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        
+        # 통화 선택 옵션 생성
+        currency_options = ""
+        for currency_code, data in charts_data.items():
+            selected = "selected" if currency_code == default_currency else ""
+            currency_options += f'<option value="{currency_code}" {selected}>{data["info"]["name"]} ({currency_code})</option>\n'
+        
+        # 각 통화별 컨텐츠 생성
+        currency_contents = ""
+        for currency_code, data in charts_data.items():
+            display_style = "block" if currency_code == default_currency else "none"
+            
+            # 그래프 HTML 생성
+            graph_html = data['figure'].to_html(include_plotlyjs='cdn', full_html=False, config={'responsive': True})
+            
+            currency_contents += f"""
+        <div id="currency-{currency_code}" class="currency-content" style="display: {display_style};">
+            {data['summary']}
+            
+            <div class="chart-container">
+                {graph_html}
+            </div>
+        </div>
+"""
+        
+        # 전체 HTML 구성
+        html_content = f"""
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{title}</title>
+    <style>
+        body {{
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }}
+        .container {{
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 18px;
+        }}
+        .header {{
+            text-align: center;
+            padding: 36px 18px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 27px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }}
+        .header h1 {{
+            margin: 0;
+            font-size: 36px;
+        }}
+        .currency-selector {{
+            text-align: center;
+            margin-bottom: 27px;
+            padding: 18px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }}
+        .currency-selector label {{
+            font-size: 16px;
+            font-weight: bold;
+            color: #2C3E50;
+            margin-right: 12px;
+        }}
+        .currency-selector select {{
+            padding: 10px 20px;
+            font-size: 16px;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            background-color: white;
+            color: #2C3E50;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 250px;
+        }}
+        .currency-selector select:hover {{
+            border-color: #764ba2;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+        }}
+        .currency-selector select:focus {{
+            outline: none;
+            border-color: #764ba2;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }}
+        .currency-content {{
+            display: none;
+        }}
+        .chart-container {{
+            background-color: white;
+            padding: 18px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 27px;
+            width: 100%;
+        }}
+        .chart-container > div {{
+            width: 100% !important;
+        }}
+        .footer {{
+            text-align: center;
+            padding: 18px;
+            color: #7f8c8d;
+            font-size: 14px;
+        }}
+    </style>
+    <script>
+        function changeCurrency() {{
+            const selector = document.getElementById('currency-selector');
+            const selectedCurrency = selector.value;
+            
+            // 모든 통화 컨텐츠 숨기기
+            const allContents = document.querySelectorAll('.currency-content');
+            allContents.forEach(content => {{
+                content.style.display = 'none';
+            }});
+            
+            // 선택된 통화만 표시
+            const selectedContent = document.getElementById('currency-' + selectedCurrency);
+            if (selectedContent) {{
+                selectedContent.style.display = 'block';
+                
+                // Plotly 그래프 크기 재조정
+                setTimeout(() => {{
+                    const plotlyDivs = selectedContent.querySelectorAll('.plotly-graph-div');
+                    plotlyDivs.forEach(div => {{
+                        if (window.Plotly) {{
+                            window.Plotly.Plots.resize(div);
+                        }}
+                    }});
+                }}, 100);
+            }}
+        }}
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>💱 {title}</h1>
+            <p>환율 트렌드 및 이동평균 분석 대시보드</p>
+        </div>
+        
+        <div class="currency-selector">
+            <label for="currency-selector">통화 선택:</label>
+            <select id="currency-selector" onchange="changeCurrency()">
+                {currency_options}
+            </select>
+        </div>
+        
+        {currency_contents}
+        
+        <div class="footer">
+            <p>데이터 출처: FinanceDataReader</p>
+            <p>생성 일시: {generated_time}</p>
+            <p>© 2026 FX Trend Dashboard</p>
+        </div>
+    </div>
+</body>
+</html>
+"""
+        
+        # 파일로 저장
+        with open(output_path, 'w', encoding='utf-8') as f:
+            f.write(html_content)
+        
+        print(f"다중 통화 HTML 파일이 생성되었습니다: {output_path}")
