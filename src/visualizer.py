@@ -130,42 +130,50 @@ class FXVisualizer:
         x_range_start = df['Date'].min() - pd.Timedelta(days=padding_days)
         x_range_end = df['Date'].max() + pd.Timedelta(days=padding_days)
         
-        # 레이아웃 설정
+        # 레이아웃 설정 (Bloomberg Terminal: 다크 배경, 대비되는 축/그리드/글자)
         fig.update_layout(
             title=dict(
                 text=f"{currency_name} 환율 트렌드 및 이동평균",
-                font=dict(size=24, color='#2C3E50'),
+                font=dict(size=20, color='#ffb86c'),
                 x=0.5,
                 xanchor='center'
             ),
             xaxis=dict(
-                title='',  # X축 제목 제거
+                title='',
                 showgrid=True,
                 gridwidth=1,
-                gridcolor='LightGray',
+                gridcolor='#484f58',
+                linecolor='#586069',
+                zerolinecolor='#586069',
                 tickformat='%Y-%m-%d',
-                range=[x_range_start, x_range_end]  # 좌우 여백 추가
+                range=[x_range_start, x_range_end],
+                tickfont=dict(color='#e6edf3', size=11)
             ),
             yaxis=dict(
-                title=currency_symbol,  # 통화 심볼 표시
+                title=currency_symbol,
                 showgrid=True,
                 gridwidth=1,
-                gridcolor='LightGray',
-                tickformat=',.0f'
+                gridcolor='#484f58',
+                linecolor='#586069',
+                zerolinecolor='#586069',
+                tickformat=',.0f',
+                tickfont=dict(color='#e6edf3', size=11)
             ),
             hovermode='x unified',
-            autosize=True,  # 자동 크기 조정
+            autosize=True,
             height=self.config.get('height', 600),
-            margin=dict(l=60, r=20, t=80, b=40),  # 여백 조정
+            margin=dict(l=60, r=20, t=80, b=40),
             legend=dict(
                 x=0.01,
                 y=0.99,
-                bgcolor='rgba(255, 255, 255, 0.8)',
-                bordercolor='Gray',
-                borderwidth=1
+                bgcolor='rgba(22, 27, 34, 0.9)',
+                bordercolor='#484f58',
+                borderwidth=1,
+                font=dict(color='#e6edf3', size=11)
             ),
-            plot_bgcolor='white',
-            paper_bgcolor='white'
+            plot_bgcolor='#1c2128',
+            paper_bgcolor='#161b22',
+            font=dict(family='Consolas, Monaco, Courier New, monospace', color='#e6edf3', size=11)
         )
         
         return fig
@@ -186,22 +194,22 @@ class FXVisualizer:
             str: HTML 문자열
         """
         html = f"""
-        <div style="text-align: center; margin: 18px 0; padding: 18px; background-color: #f8f9fa; border-radius: 10px;">
+        <div style="text-align: center; margin: 18px 0; padding: 18px; background-color: #161b22; border: 1px solid #30363d; border-radius: 4px;">
             <div style="display: flex; justify-content: space-around; flex-wrap: wrap;">
-                <div style="margin: 9px; padding: 13px; background-color: white; border-radius: 8px; min-width: 200px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                    <h3 style="color: #e74c3c; margin: 0;">최고 환율</h3>
-                    <p style="font-size: 24px; font-weight: bold; margin: 9px 0;">{statistics['max']['price']:,.2f}원</p>
-                    <p style="color: #7f8c8d; margin: 0;">{statistics['max']['formatted_date']}</p>
+                <div class="stat-high" style="margin: 9px; padding: 13px; border-radius: 4px; min-width: 200px;">
+                    <h3 style="color: #ff6b6b; margin: 0;">최고 환율</h3>
+                    <p style="font-size: 24px; font-weight: bold; margin: 9px 0; color: #ff8c00;">{statistics['max']['price']:,.2f}원</p>
+                    <p style="color: #8b949e; margin: 0;">{statistics['max']['formatted_date']}</p>
                 </div>
-                <div style="margin: 9px; padding: 13px; background-color: white; border-radius: 8px; min-width: 200px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                    <h3 style="color: #3498db; margin: 0;">최저 환율</h3>
-                    <p style="font-size: 24px; font-weight: bold; margin: 9px 0;">{statistics['min']['price']:,.2f}원</p>
-                    <p style="color: #7f8c8d; margin: 0;">{statistics['min']['formatted_date']}</p>
+                <div class="stat-low" style="margin: 9px; padding: 13px; border-radius: 4px; min-width: 200px;">
+                    <h3 style="color: #5dd0f5; margin: 0;">최저 환율</h3>
+                    <p style="font-size: 24px; font-weight: bold; margin: 9px 0; color: #ff8c00;">{statistics['min']['price']:,.2f}원</p>
+                    <p style="color: #8b949e; margin: 0;">{statistics['min']['formatted_date']}</p>
                 </div>
-                <div style="margin: 9px; padding: 13px; background-color: white; border-radius: 8px; min-width: 200px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                    <h3 style="color: #27ae60; margin: 0;">현재 환율</h3>
-                    <p style="font-size: 24px; font-weight: bold; margin: 9px 0;">{statistics['current']['price']:,.2f}원</p>
-                    <p style="color: #7f8c8d; margin: 0;">{statistics['current']['formatted_date']}</p>
+                <div class="stat-current" style="margin: 9px; padding: 13px; border-radius: 4px; min-width: 200px;">
+                    <h3 style="color: #7ee787; margin: 0;">현재 환율</h3>
+                    <p style="font-size: 24px; font-weight: bold; margin: 9px 0; color: #ff8c00;">{statistics['current']['price']:,.2f}원</p>
+                    <p style="color: #8b949e; margin: 0;">{statistics['current']['formatted_date']}</p>
                 </div>
             </div>
         </div>
@@ -236,47 +244,15 @@ class FXVisualizer:
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{title}</title>
     <style>
-        body {{
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f5f5f5;
-        }}
-        .container {{
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 18px;
-        }}
-        .header {{
-            text-align: center;
-            padding: 36px 18px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border-radius: 10px;
-            margin-bottom: 27px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }}
-        .header h1 {{
-            margin: 0;
-            font-size: 36px;
-        }}
-        .chart-container {{
-            background-color: white;
-            padding: 18px;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            margin-bottom: 27px;
-            width: 100%;
-        }}
-        .chart-container > div {{
-            width: 100% !important;
-        }}
-        .footer {{
-            text-align: center;
-            padding: 18px;
-            color: #7f8c8d;
-            font-size: 14px;
-        }}
+        /* Bloomberg Terminal Style */
+        body {{ font-family: 'Consolas', 'Monaco', 'Courier New', monospace; margin: 0; padding: 0; background-color: #0a0e14; color: #ff8c00; }}
+        .container {{ max-width: 1400px; margin: 0 auto; padding: 18px; }}
+        .header {{ text-align: center; padding: 36px 18px; background: #161b22; color: #ff8c00; border: 1px solid #30363d; border-radius: 4px; margin-bottom: 27px; }}
+        .header h1 {{ margin: 0; font-size: 28px; font-weight: 600; }}
+        .header p {{ color: #8b949e; margin: 8px 0 0 0; font-size: 13px; }}
+        .chart-container {{ background-color: #161b22; padding: 18px; border: 1px solid #30363d; border-radius: 4px; margin-bottom: 27px; width: 100%; }}
+        .chart-container > div {{ width: 100% !important; }}
+        .footer {{ text-align: center; padding: 18px; color: #8b949e; font-size: 12px; }}
     </style>
 </head>
 <body>
@@ -360,84 +336,24 @@ class FXVisualizer:
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{title}</title>
     <style>
-        body {{
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f5f5f5;
-        }}
-        .container {{
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 18px;
-        }}
-        .header {{
-            text-align: center;
-            padding: 36px 18px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border-radius: 10px;
-            margin-bottom: 27px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }}
-        .header h1 {{
-            margin: 0;
-            font-size: 36px;
-        }}
-        .currency-selector {{
-            text-align: center;
-            margin-bottom: 27px;
-            padding: 18px;
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }}
-        .currency-selector label {{
-            font-size: 16px;
-            font-weight: bold;
-            color: #2C3E50;
-            margin-right: 12px;
-        }}
-        .currency-selector select {{
-            padding: 10px 20px;
-            font-size: 16px;
-            border: 2px solid #667eea;
-            border-radius: 8px;
-            background-color: white;
-            color: #2C3E50;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            min-width: 250px;
-        }}
-        .currency-selector select:hover {{
-            border-color: #764ba2;
-            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
-        }}
-        .currency-selector select:focus {{
-            outline: none;
-            border-color: #764ba2;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }}
-        .currency-content {{
-            display: none;
-        }}
-        .chart-container {{
-            background-color: white;
-            padding: 18px;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            margin-bottom: 27px;
-            width: 100%;
-        }}
-        .chart-container > div {{
-            width: 100% !important;
-        }}
-        .footer {{
-            text-align: center;
-            padding: 18px;
-            color: #7f8c8d;
-            font-size: 14px;
-        }}
+        /* Bloomberg Terminal Style */
+        body {{ font-family: 'Consolas', 'Monaco', 'Courier New', monospace; margin: 0; padding: 0; background-color: #0a0e14; color: #ff8c00; }}
+        .container {{ max-width: 1400px; margin: 0 auto; padding: 18px; }}
+        .header {{ text-align: center; padding: 36px 18px; background: #161b22; color: #ff8c00; border: 1px solid #30363d; border-radius: 4px; margin-bottom: 27px; }}
+        .header h1 {{ margin: 0; font-size: 28px; font-weight: 600; letter-spacing: 0.02em; }}
+        .header p {{ color: #8b949e; margin: 8px 0 0 0; font-size: 13px; }}
+        .currency-selector {{ text-align: center; margin-bottom: 27px; padding: 18px; background-color: #161b22; border: 1px solid #30363d; border-radius: 4px; }}
+        .currency-selector label {{ font-size: 14px; font-weight: bold; color: #ffb86c; margin-right: 12px; }}
+        .currency-selector select {{ padding: 8px 16px; font-size: 14px; font-family: 'Consolas', 'Monaco', 'Courier New', monospace; border: 1px solid #30363d; border-radius: 4px; background-color: #0d1117; color: #ff8c00; cursor: pointer; min-width: 250px; }}
+        .currency-selector select:hover {{ border-color: #ff8c00; }}
+        .currency-selector select:focus {{ outline: none; border-color: #ff8c00; box-shadow: 0 0 0 1px #ff8c00; }}
+        .currency-content {{ display: none; }}
+        .chart-container {{ background-color: #161b22; padding: 18px; border: 1px solid #30363d; border-radius: 4px; margin-bottom: 27px; width: 100%; }}
+        .chart-container > div {{ width: 100% !important; }}
+        .footer {{ text-align: center; padding: 18px; color: #8b949e; font-size: 12px; }}
+        .stat-high {{ background-color: #1a1210 !important; border: 1px solid #4a2c26 !important; }}
+        .stat-low {{ background-color: #0d1522 !important; border: 1px solid #1e3a52 !important; }}
+        .stat-current {{ background-color: #0d1610 !important; border: 1px solid #1e4020 !important; }}
     </style>
     <script>
         function changeCurrency() {{
@@ -490,6 +406,26 @@ class FXVisualizer:
             <p>© 2026 FX Trend Dashboard</p>
         </div>
     </div>
+    <script>
+        (function() {{
+            function applyBloombergTheme() {{
+                var plotlyDivs = document.querySelectorAll('.plotly-graph-div');
+                var darkLayout = {{
+                    paper_bgcolor: '#161b22',
+                    plot_bgcolor: '#1c2128',
+                    font: {{ color: '#e6edf3', family: 'Consolas, Monaco, Courier New, monospace', size: 12 }},
+                    xaxis: {{ gridcolor: '#484f58', linecolor: '#586069', zerolinecolor: '#586069', tickfont: {{ color: '#e6edf3', size: 11 }}, title: {{ font: {{ color: '#ffb86c' }} }} }},
+                    yaxis: {{ gridcolor: '#484f58', linecolor: '#586069', zerolinecolor: '#586069', tickfont: {{ color: '#e6edf3', size: 11 }}, title: {{ font: {{ color: '#ffb86c' }} }} }},
+                    legend: {{ font: {{ color: '#e6edf3', size: 11 }}, bgcolor: 'rgba(22,27,34,0.9)', borderwidth: 1, bordercolor: '#484f58' }}
+                }};
+                plotlyDivs.forEach(function(div) {{
+                    if (window.Plotly && div.id) Plotly.relayout(div.id, darkLayout);
+                }});
+            }}
+            if (document.readyState === 'complete') setTimeout(applyBloombergTheme, 50);
+            else window.addEventListener('load', function() {{ setTimeout(applyBloombergTheme, 50); }});
+        }})();
+    </script>
 </body>
 </html>
 """

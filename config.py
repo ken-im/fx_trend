@@ -31,34 +31,34 @@ DEFAULT_CURRENCY = 'USD/KRW'
 DEFAULT_PERIOD_YEARS = 5  # 그래프에 표시할 기간
 MA_WARMUP_YEARS = 3  # 이동평균 계산을 위한 추가 기간 (최대 MA 기간)
 
-# 이동평균 설정
+# 이동평균 설정 (Bloomberg Terminal: 다크 배경에 잘 보이는 색상)
 MOVING_AVERAGES = {
     'MA3M': {
         'days': 60,
         'label': '3개월 이동평균',
-        'color': '#FF6B6B',
+        'color': '#ff6b6b',
         'line_width': 1
     },
     'MA1Y': {
         'days': 250,
         'label': '1년 이동평균',
-        'color': '#4ECDC4',
+        'color': '#5dd0f5',
         'line_width': 1
     },
     'MA3Y': {
         'days': 750,
         'label': '3년 이동평균',
-        'color': '#45B7D1',
+        'color': '#7ee787',
         'line_width': 1
     }
 }
 
-# 그래프 설정
+# 그래프 설정 (Bloomberg Terminal Style)
 GRAPH_CONFIG = {
     'width': 1200,
     'height': 600,
-    'line_width': 2,
-    'original_color': '#2C3E50'
+    'line_width': 2.5,
+    'original_color': '#ffa726'
 }
 
 # 출력 설정
