@@ -48,7 +48,7 @@ Write-Host ""
 # 4. 의존성 설치
 Write-Host "[4/4] 의존성 설치 중..." -ForegroundColor Yellow
 pip install --upgrade pip
-pip install -r requirements.txt
+pip install -r backend\requirements.txt
 if ($LASTEXITCODE -eq 0) {
     Write-Host "✓ 의존성 설치 완료" -ForegroundColor Green
 } else {

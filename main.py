@@ -16,10 +16,10 @@ if sys.platform == 'win32':
 project_root = Path(__file__).parent
 sys.path.insert(0, str(project_root))
 
-from src.data_collector import FXDataCollector
-from src.analyzer import FXAnalyzer
-from src.visualizer import FXVisualizer
-import config
+from backend.src.data_collector import FXDataCollector
+from backend.src.analyzer import FXAnalyzer
+from frontend.src.visualizer import FXVisualizer
+import backend.config as config
 
 
 def main():

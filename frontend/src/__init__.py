@@ -1,0 +1,5 @@
+"""
+FX Trend Dashboard Frontend 모듈
+"""
+
+__version__ = '0.1.0'

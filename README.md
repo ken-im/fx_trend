@@ -31,7 +31,12 @@ venv\Scripts\activate
 source venv/bin/activate
 
 # 의존성 설치
-pip install -r requirements.txt
+pip install -r backend/requirements.txt
+```
+
+또는 Windows PowerShell에서 자동 설치:
+```powershell
+.\setup.ps1
 ```
 
 ### 2. 실행
@@ -48,15 +53,27 @@ python main.py
 
 ```
 fx_trend/
-├── src/
-│   ├── data_collector.py    # 데이터 수집 모듈
-│   ├── analyzer.py           # 분석 모듈
-│   └── visualizer.py         # 시각화 모듈
-├── docs/
-│   └── index.html            # 생성된 대시보드 (GitHub Pages)
-├── main.py                   # 메인 실행 파일
-├── requirements.txt          # 의존성 목록
-└── README.md
+├── backend/                  # 데이터 생성 및 관리
+│   ├── src/
+│   │   ├── data_collector.py    # 환율 데이터 수집
+│   │   └── analyzer.py           # 이동평균 계산 및 통계 분석
+│   ├── config.py             # 통화 설정, 이동평균 설정
+│   └── requirements.txt      # Python 의존성
+│
+├── frontend/                 # 화면 표현 및 관리
+│   └── src/
+│       └── visualizer.py     # Plotly 그래프 생성 및 HTML 생성
+│
+├── docs/                     # 문서 및 배포
+│   ├── PRD-fx_trend_dashboard.md      # 요구사항 정의서
+│   ├── EXECUTION_PLAN.md              # 실행 계획
+│   └── index.html                     # 생성된 대시보드 (GitHub Pages)
+│
+├── main.py                   # 전체 실행 스크립트
+├── setup.ps1                 # Windows 자동 설치 스크립트
+├── README.md                 # 프로젝트 문서
+├── .gitignore
+└── LICENSE
 ```
 
 ## 🛠 기술 스택
@@ -72,6 +89,9 @@ fx_trend/
 - USD/KRW (미국 달러)
 - JPY/KRW (일본 엔화)
 - EUR/KRW (유로화)
+- USD/BRL (브라질 헤알, USD 기준)
+
+드롭다운 메뉴에서 통화를 선택하여 각 통화의 환율 트렌드를 확인할 수 있습니다.
 
 ## 📄 라이선스
 
