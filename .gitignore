@@ -42,6 +42,7 @@ Thumbs.db
 # Project specific
 data/cache/
 *.log
+fx_trend_refresh.bat
 
 # Keep docs folder structure but ignore cache
 !docs/.gitkeep
